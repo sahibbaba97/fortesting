@@ -1,0 +1,25 @@
+{
+	"name": "trigger1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Blob to SQL",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/demoadffirst/blobs/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/2535b69d-f82b-450b-b944-1d072525fa83/resourceGroups/Demo/providers/Microsoft.Storage/storageAccounts/demoadffirst",
+			"events": [
+				"Microsoft.Storage.BlobCreated",
+				"Microsoft.Storage.BlobDeleted"
+			]
+		}
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "DB_Connection_Master",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CM_DB_Master",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "Master",
+			"table": "Property"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

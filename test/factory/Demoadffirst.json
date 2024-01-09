@@ -1,0 +1,17 @@
+{
+	"name": "Demoadffirst",
+	"properties": {
+		"globalParameters": {
+			"sadadsa": {
+				"type": "string",
+				"value": "sfasfaf"
+			}
+		}
+	},
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b3f9d281-dcf7-424c-add2-793898c23364",
+		"tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+	}
+}

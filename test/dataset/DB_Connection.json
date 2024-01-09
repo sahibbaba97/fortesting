@@ -1,0 +1,45 @@
+{
+	"name": "DB_Connection",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CM_DB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PropertyCodeId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AccountName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ARNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ARTypeCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ARNumberNumeric",
+				"type": "bigint",
+				"precision": 19
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
