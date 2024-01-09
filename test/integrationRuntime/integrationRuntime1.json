@@ -1,0 +1,12 @@
+{
+	"name": "integrationRuntime1",
+	"properties": {
+		"type": "SelfHosted",
+		"typeProperties": {
+			"linkedInfo": {
+				"resourceId": "/subscriptions/0900e2b7-5fa8-40da-91eb-2c803f158776/resourcegroups/ITEC-AZ-PR-DF-SUPPORTING-SERVICES/providers/Microsoft.DataFactory/factories/CTC-AZ-PR-SHARED-DF/integrationruntimes/CTC-ENT-SQL",
+				"authorizationType": "Rbac"
+			}
+		}
+	}
+}

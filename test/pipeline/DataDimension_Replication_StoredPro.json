@@ -1,0 +1,185 @@
+{
+	"name": "DataDimension_Replication_StoredPro",
+	"properties": {
+		"activities": [
+			{
+				"name": "QuerySchema",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT \nSUBSTRING([TABLE_NAME], CHARINDEX('$', [TABLE_NAME]) + 1, LEN([TABLE_NAME]))+']' as [TABLE_NAME],\n [TABLE_CATALOG] as [SCHEMA_NAME]\n\t--,[TABLE_SCHEMA] + '.'+ [TABLE_NAME] as [TABLE_NAME]\nFROM INFORMATION_SCHEMA.TABLES\nWHERE TABLE_TYPE = 'BASE TABLE'\nand TABLE_NAME in ('ERMES2010$Barcodes','ERMES2010$Color Group Lines')",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "DataDimensionLoad",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "QuerySchema",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('QuerySchema').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "ExportDataDimension",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Wait1",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT TOP 10 * FROM [dbo].[ERMES2010$',item().TABLE_NAME)",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SQLSERVERTABLESOURCE",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": {
+											"value": "@item().TABLE_NAME",
+											"type": "Expression"
+										},
+										"SchemaNameSource": {
+											"value": "@item().SCHEMA_NAME",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DATADIMENSIONTARGET",
+									"type": "DatasetReference",
+									"parameters": {
+										"ContainerNm": {
+											"value": "ERM-PR-NAV",
+											"type": "Expression"
+										},
+										"DirectoryNm": "DataDimensions",
+										"Filename": {
+											"value": "@item().TABLE_NAME",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Validation1",
+							"type": "Validation",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "SQLSERVERTABLESOURCE",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": "ERMES2010$Barcodes",
+										"SchemaNameSource": "dbo"
+									}
+								},
+								"timeout": "0.12:00:00",
+								"sleep": 10
+							}
+						},
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [
+								{
+									"activity": "Validation1",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"TN": {
+				"type": "Array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-11-15T15:25:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

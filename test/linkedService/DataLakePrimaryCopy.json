@@ -1,0 +1,15 @@
+{
+	"name": "DataLakePrimaryCopy",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://ermdevdlprcopy.dfs.core.windows.net/"
+		},
+		"connectVia": {
+			"referenceName": "AzureIntegrationServices",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

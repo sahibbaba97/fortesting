@@ -1,0 +1,22 @@
+{
+	"name": "ERMNAV5",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ermdwsecrets",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ERM-PR-NAV"
+			}
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime1",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
