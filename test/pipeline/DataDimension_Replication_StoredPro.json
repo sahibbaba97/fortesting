@@ -79,12 +79,14 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "ParquetSink",
+									"type": "DelimitedTextSink",
 									"storeSettings": {
 										"type": "AzureBlobFSWriteSettings"
 									},
 									"formatSettings": {
-										"type": "ParquetWriteSettings"
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
 									}
 								},
 								"enableStaging": false,
@@ -115,19 +117,8 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "DATADIMENSIONTARGET",
-									"type": "DatasetReference",
-									"parameters": {
-										"ContainerNm": {
-											"value": "ERM-PR-NAV",
-											"type": "Expression"
-										},
-										"DirectoryNm": "DataDimensions",
-										"Filename": {
-											"value": "@item().TABLE_NAME",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "DelimitedText4",
+									"type": "DatasetReference"
 								}
 							]
 						},
