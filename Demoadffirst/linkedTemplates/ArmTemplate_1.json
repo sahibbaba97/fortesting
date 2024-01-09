@@ -1,0 +1,562 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Demoadffirst"
+		},
+		"trigger1_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/2535b69d-f82b-450b-b944-1d072525fa83/resourceGroups/Demo/providers/Microsoft.Storage/storageAccounts/demoadffirst"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CarsCSV",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CarsTable",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-01-08T10:42:49Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQLSERVERLOOKUPTBLS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "programid",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "chartable",
+						"type": "image"
+					},
+					{
+						"name": "maxrecsize",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "maxloginattempts",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "passwordexpindays",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "supergroupid",
+						"type": "varchar"
+					},
+					{
+						"name": "unifiedloginallowed",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "contype",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "shadowpwd",
+						"type": "varchar"
+					},
+					{
+						"name": "databasemagic",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "databaseversionno",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "clientdatabaseversionno",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "maintainviews",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "diagnostics",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "identifiers",
+						"type": "varchar"
+					},
+					{
+						"name": "maintainrelationships",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "convertidentifiers",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "invalididentifierchars",
+						"type": "varchar"
+					},
+					{
+						"name": "license",
+						"type": "image"
+					},
+					{
+						"name": "checkcodepage",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "quickfind",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "maintaindefaults",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "locktimeout",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "locktimeoutperiod",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "hardrowlock",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "bufferedrows",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "securityoption",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "ERMES2010$Barcodes"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQLSERVERTABLESOURCE')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TableName": {
+						"type": "string"
+					},
+					"SchemaNameSource": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "programid",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "chartable",
+						"type": "image"
+					},
+					{
+						"name": "maxrecsize",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "maxloginattempts",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "passwordexpindays",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "supergroupid",
+						"type": "varchar"
+					},
+					{
+						"name": "unifiedloginallowed",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "contype",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "shadowpwd",
+						"type": "varchar"
+					},
+					{
+						"name": "databasemagic",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "databaseversionno",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "clientdatabaseversionno",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "maintainviews",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "diagnostics",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "identifiers",
+						"type": "varchar"
+					},
+					{
+						"name": "maintainrelationships",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "convertidentifiers",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "invalididentifierchars",
+						"type": "varchar"
+					},
+					{
+						"name": "license",
+						"type": "image"
+					},
+					{
+						"name": "checkcodepage",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "quickfind",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "maintaindefaults",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "locktimeout",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "locktimeoutperiod",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "hardrowlock",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "bufferedrows",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "securityoption",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().SchemaNameSource",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob to SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Cars CSV to SQL",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CarsCSV",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CarsTable",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Cars CSV to SQL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pipeline",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-01-08T10:42:49Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pipeline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scheduled_trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2024-01-08T10:00:00",
+						"timeZone": "Central European Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								10
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pipeline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Blob to SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/demoadffirst/blobs/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('trigger1_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated",
+						"Microsoft.Storage.BlobDeleted"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Blob to SQL')]"
+			]
+		}
+	]
+}

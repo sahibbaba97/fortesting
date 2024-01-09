@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "Demoadffirst"
+		},
+		"AzueSQL_connectionString": {
+			"value": ""
+		},
+		"CM_DB_connectionString": {
+			"value": ""
+		},
+		"CM_DB_Master_connectionString": {
+			"value": ""
+		},
+		"Inputblob_connectionString": {
+			"value": ""
+		},
+		"OutputSQL_connectionString": {
+			"value": ""
+		},
+		"SqlServer1_connectionString": {
+			"value": "Integrated Security=True;Data Source=SAHIB;Initial Catalog=Sahib"
+		},
+		"SqlServer1_password": {
+			"value": ""
+		},
+		"SharepointOnline_properties_typeProperties_url": {
+			"value": "https://microsofteur.sharepoint.com"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"value": "EUROPE\\v-sbabayev"
+		},
+		"ermdwsecrets_properties_typeProperties_baseUrl": {
+			"value": "https://erm-dw-secrets.vault.azure.net/"
+		},
+		"trigger1_properties_typeProperties_scope": {
+			"value": "/subscriptions/2535b69d-f82b-450b-b944-1d072525fa83/resourceGroups/Demo/providers/Microsoft.Storage/storageAccounts/demoadffirst"
+		}
+	}
+}

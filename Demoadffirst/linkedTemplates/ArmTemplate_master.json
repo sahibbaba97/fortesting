@@ -1,0 +1,140 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Demoadffirst"
+		},
+		"AzueSQL_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzueSQL'"
+		},
+		"CM_DB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CM_DB'"
+		},
+		"CM_DB_Master_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CM_DB_Master'"
+		},
+		"Inputblob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Inputblob'"
+		},
+		"OutputSQL_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'OutputSQL'"
+		},
+		"SqlServer1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServer1'",
+			"defaultValue": "Integrated Security=True;Data Source=SAHIB;Initial Catalog=Sahib"
+		},
+		"SqlServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SqlServer1'"
+		},
+		"SharepointOnline_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://microsofteur.sharepoint.com"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "EUROPE\\v-sbabayev"
+		},
+		"ermdwsecrets_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://erm-dw-secrets.vault.azure.net/"
+		},
+		"trigger1_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/2535b69d-f82b-450b-b944-1d072525fa83/resourceGroups/Demo/providers/Microsoft.Storage/storageAccounts/demoadffirst"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "Demoadffirst_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzueSQL_connectionString": {
+						"value": "[parameters('AzueSQL_connectionString')]"
+					},
+					"CM_DB_connectionString": {
+						"value": "[parameters('CM_DB_connectionString')]"
+					},
+					"CM_DB_Master_connectionString": {
+						"value": "[parameters('CM_DB_Master_connectionString')]"
+					},
+					"Inputblob_connectionString": {
+						"value": "[parameters('Inputblob_connectionString')]"
+					},
+					"OutputSQL_connectionString": {
+						"value": "[parameters('OutputSQL_connectionString')]"
+					},
+					"SqlServer1_connectionString": {
+						"value": "[parameters('SqlServer1_connectionString')]"
+					},
+					"SqlServer1_password": {
+						"value": "[parameters('SqlServer1_password')]"
+					},
+					"SharepointOnline_properties_typeProperties_url": {
+						"value": "[parameters('SharepointOnline_properties_typeProperties_url')]"
+					},
+					"ermdwsecrets_properties_typeProperties_baseUrl": {
+						"value": "[parameters('ermdwsecrets_properties_typeProperties_baseUrl')]"
+					},
+					"SqlServer1_properties_typeProperties_userName": {
+						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "Demoadffirst_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"trigger1_properties_typeProperties_scope": {
+						"value": "[parameters('trigger1_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Demoadffirst_ArmTemplate_0')]"
+			]
+		}
+	]
+}
