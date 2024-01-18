@@ -1,0 +1,12 @@
+{
+	"name": "AzueSQL",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=sqltestserver123.database.windows.net;initial catalog=SQLtestdatabase;user id=SQLtestserver123",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDQxMTZDNUE0LTAyNEQtNEIwNy05RDk4LTk1NzRGREI0OEY1RF9kYzA0NTcyZS0xMzI4LTRjZWQtOWZmZi0wNjE0NGRhYjgyOTQiDQp9"
+		}
+	}
+}
