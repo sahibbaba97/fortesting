@@ -6,6 +6,9 @@
 				"type": "string",
 				"value": "sfasfaf"
 			}
+		},
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "true"
 		}
 	},
 	"location": "westeurope",
