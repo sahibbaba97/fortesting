@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzueSQL'"
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
 		"CM_DB_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'CM_DB'"
@@ -36,6 +44,18 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SqlServer1'"
 		},
+		"SqlServer2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServer2'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://synapsedem.dfs.core.windows.net/"
+		},
+		"DataLakePrimaryCopy_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ermdevdlprcopy.dfs.core.windows.net/"
+		},
 		"SharepointOnline_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://microsofteur.sharepoint.com"
@@ -43,14 +63,6 @@
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "EUROPE\\v-sbabayev"
-		},
-		"ermdwsecrets_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://erm-dw-secrets.vault.azure.net/"
-		},
-		"trigger1_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/2535b69d-f82b-450b-b944-1d072525fa83/resourceGroups/Demo/providers/Microsoft.Storage/storageAccounts/demoadffirst"
 		},
 		"containerUri": {
 			"type": "string",
@@ -100,14 +112,17 @@
 					"SqlServer1_password": {
 						"value": "[parameters('SqlServer1_password')]"
 					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
 					"SharepointOnline_properties_typeProperties_url": {
 						"value": "[parameters('SharepointOnline_properties_typeProperties_url')]"
 					},
-					"ermdwsecrets_properties_typeProperties_baseUrl": {
-						"value": "[parameters('ermdwsecrets_properties_typeProperties_baseUrl')]"
-					},
 					"SqlServer1_properties_typeProperties_userName": {
 						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
 					}
 				}
 			},
@@ -127,8 +142,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"trigger1_properties_typeProperties_scope": {
-						"value": "[parameters('trigger1_properties_typeProperties_scope')]"
+					"AzureSqlDatabase1_connectionString": {
+						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
+					},
+					"SqlServer2_connectionString": {
+						"value": "[parameters('SqlServer2_connectionString')]"
+					},
+					"DataLakePrimaryCopy_properties_typeProperties_url": {
+						"value": "[parameters('DataLakePrimaryCopy_properties_typeProperties_url')]"
 					}
 				}
 			},

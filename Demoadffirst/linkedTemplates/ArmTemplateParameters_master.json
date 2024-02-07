@@ -8,6 +8,12 @@
 		"AzueSQL_connectionString": {
 			"value": ""
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
 		"CM_DB_connectionString": {
 			"value": ""
 		},
@@ -26,17 +32,20 @@
 		"SqlServer1_password": {
 			"value": ""
 		},
+		"SqlServer2_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://synapsedem.dfs.core.windows.net/"
+		},
+		"DataLakePrimaryCopy_properties_typeProperties_url": {
+			"value": "https://ermdevdlprcopy.dfs.core.windows.net/"
+		},
 		"SharepointOnline_properties_typeProperties_url": {
 			"value": "https://microsofteur.sharepoint.com"
 		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"value": "EUROPE\\v-sbabayev"
-		},
-		"ermdwsecrets_properties_typeProperties_baseUrl": {
-			"value": "https://erm-dw-secrets.vault.azure.net/"
-		},
-		"trigger1_properties_typeProperties_scope": {
-			"value": "/subscriptions/2535b69d-f82b-450b-b944-1d072525fa83/resourceGroups/Demo/providers/Microsoft.Storage/storageAccounts/demoadffirst"
 		},
 		"containerUri": {
 			"value": ""
