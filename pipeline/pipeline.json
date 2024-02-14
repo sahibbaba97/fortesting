@@ -179,7 +179,9 @@
 						"referenceName": "CarsCSV",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"exists"
+					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
 						"enablePartitionDiscovery": false
