@@ -68,9 +68,32 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@activity('Copy data2').output",
+						"value": "@activity('Copy data2').output.pipelineReturnValue",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Web1",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "GET",
+								"url": "https://accounts.accesscontrol.windows.net/72f988bf-86f1-41af-91ab-2d7cd011db47/tokens/OAuth/2",
+								"connectVia": {
+									"referenceName": "AutoResolveIntegrationRuntime",
+									"type": "IntegrationRuntimeReference"
+								}
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Copy data2",
