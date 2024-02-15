@@ -1,0 +1,238 @@
+{
+	"name": "DS_BISTG_Cuadro_Tiendas_Retail",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lsMiBiStg",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlMITable",
+		"schema": [
+			{
+				"name": "SUPERFICIE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "S_VENTA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "S_ALMACÉN",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ALM_EXT_RESERVA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "N_PROB",
+				"type": "nvarchar"
+			},
+			{
+				"name": "N_PROBENUSO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "N_MESASINFORMACION",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ML_CUELGA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ZONA_N4_PAIS",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ZONA_N1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ZONA_N2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AREA MANAGER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ZONA_N3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TIENDAS_PRONOVIAS",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_TPV",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_MVX",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ESTADO_TIENDA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FECHA_APERTURA_PUBLICO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FECHA_CIERRE_PUBLICO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ANO_REFORMA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "N_PLANTAS_TIENDA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REP_M2_VENTA_PROB",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DIRECTORA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "N_ASESORAS",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ASESORA_1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ASESORA_2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ASESORA_3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ASESORA_4",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FECHA_PREVISTA_APERTURA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FECHA_PREVISTA_CIERRE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FECHA_1_ACTIVIDAD",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FECHA_CIERRE_ACTIVIDAD",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ZONA_N5",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ZONA_N6",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_ZONA_N1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_ZONA_N2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_ZONA_N3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_ZONA_N4",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_ZONA_N5",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_ZONA_N6",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_DIRECTORA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_AREAMANAGER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_TIPO_N0",
+				"type": "nchar"
+			},
+			{
+				"name": "ID_TIPO_N1",
+				"type": "nchar"
+			},
+			{
+				"name": "ID_TIPO_N2",
+				"type": "nchar"
+			},
+			{
+				"name": "ID_TIPO_N3",
+				"type": "nchar"
+			},
+			{
+				"name": "DS_TIPO_N0",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DS_TIPO_N1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DS_TIPO_N2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DS_TIPO_N3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NUM_TC_ACTUAL",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 4
+			},
+			{
+				"name": "NUM_TC_ANTERIOR",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 4
+			},
+			{
+				"name": "EMAIL_TIENDA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EMAIL_SUPERVISORA",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "EXT_Tiendas_CuadroRetail"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
