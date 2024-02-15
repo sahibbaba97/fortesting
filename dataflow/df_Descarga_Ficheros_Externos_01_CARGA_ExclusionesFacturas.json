@@ -1,0 +1,63 @@
+{
+	"name": "df_Descarga_Ficheros_Externos_01_CARGA_ExclusionesFacturas",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_DL_Files_excel",
+						"type": "DatasetReference"
+					},
+					"name": "ExclusionesFacturas"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_BISTG",
+						"type": "DatasetReference"
+					},
+					"name": "SinkExclusionesFacturas",
+					"description": "EXT_FichadasProbadas"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Tipo Registro} as string,",
+				"          Desde as string,",
+				"          Hasta as integer,",
+				"          Division as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ExclusionesFacturas",
+				"ExclusionesFacturas derive(each(match(name!='Division'), $$ = iifNull(toString($$), '')),",
+				"          Division = toInteger(iif(length(toString(Division)) == 2,concat('0',toString(Division)),toString(Division)))) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['Insert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_01_FICHEROSEXTERNOS\\', \\'Borrado Tabla EXT_FI_ExclusionFacturas\\', \\'INI\\', getdate();\\n\\ntruncate table EXT_FI_ExclusionFacturas;\\n\\nInsert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_00_FICHEROSEXTERNOS\\', \\'Borrado Tabla EXT_FI_ExclusionFacturas\\', \\'FIN\\', getdate();\\n\\nInsert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_00_FICHEROSEXTERNOS\\', \\'Descarga Tabla EEXT_FI_ExclusionFacturas\\', \\'INI\\', getdate()\\n\\n'],",
+				"     postSQLs:['Insert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_01_FICHEROSEXTERNOS\\', \\'Descarga Tabla EXT_FI_ExclusionFacturas\\', \\'FIN\\', getdate()'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          TipoRegistro = {Tipo Registro},",
+				"          Desde,",
+				"          Hasta,",
+				"          Division",
+				"     )) ~> SinkExclusionesFacturas"
+			]
+		}
+	}
+}

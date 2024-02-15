@@ -1,0 +1,23 @@
+{
+	"name": "lsMiBiModeling",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlMI",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=sqlmi-etl-prod-weu-01.878c47b5bf5b.database.windows.net;Initial Catalog=DW_ModellingBI;User ID=GR_BI",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "akv_etl_prod_smi",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "akvGRBIPass"
+			}
+		},
+		"connectVia": {
+			"referenceName": "irmg-etl-prod-weu-01",
+			"type": "IntegrationRuntimeReference"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

@@ -1,0 +1,65 @@
+{
+	"name": "df_Descarga_Ficheros_Externos_01_CARGA_AsientosManuales",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_DL_Files_excel",
+						"type": "DatasetReference"
+					},
+					"name": "AsientosManuales"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_BISTG",
+						"type": "DatasetReference"
+					},
+					"name": "SinkAsientosManuales",
+					"description": "EXT_FichadasProbadas"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          div as short,",
+				"          asiento as integer,",
+				"          cliente as string,",
+				"          cuenta1 as integer,",
+				"          cuenta2 as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> AsientosManuales",
+				"AsientosManuales derive(asiento = toFloat((iifNull(toString(asiento), ''))),",
+				"          each(match(name=='div'||name=='cuenta1'||name=='cliente'||name=='cuenta2'), $$ = iifNull(toString($$), ''))) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['Insert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_01_FICHEROSEXTERNOS\\', \\'Borrado Tabla EXT_FI_AsientosManuales\\', \\'INI\\', getdate();\\n\\ntruncate table EXT_FI_AsientosManuales;\\n\\nInsert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_00_FICHEROSEXTERNOS\\', \\'Borrado Tabla EXT_FI_AsientosManuales\\', \\'FIN\\', getdate();\\n\\nInsert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_00_FICHEROSEXTERNOS\\', \\'Descarga Tabla EXT_FI_AsientosManuales\\', \\'INI\\', getdate()\\n\\n'],",
+				"     postSQLs:['Insert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_01_FICHEROSEXTERNOS\\', \\'Descarga Tabla EXT_FI_AsientosManuales\\', \\'FIN\\', getdate()'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Div = div,",
+				"          Asiento = asiento,",
+				"          Cliente = cliente,",
+				"          Cuenta1 = cuenta1,",
+				"          Cuenta2 = cuenta2",
+				"     )) ~> SinkAsientosManuales"
+			]
+		}
+	}
+}

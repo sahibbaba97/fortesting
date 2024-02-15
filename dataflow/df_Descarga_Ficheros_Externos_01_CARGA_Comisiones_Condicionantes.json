@@ -1,0 +1,81 @@
+{
+	"name": "df_Descarga_Ficheros_Externos_01_CARGA_Comisiones_Condicionantes",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_DL_Files_excel",
+						"type": "DatasetReference"
+					},
+					"name": "ComisionesCondicionantes"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_BISTG",
+						"type": "DatasetReference"
+					},
+					"name": "SinkComisionesCondicionantes",
+					"description": "EXT_FichadasProbadas"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Representante_id as short,",
+				"          TipoPedido_Id as string,",
+				"          Gama_Id as short,",
+				"          Marca_Id as string,",
+				"          FechaInicio as integer,",
+				"          Comision as double,",
+				"          {Nombre Rep} as string,",
+				"          AM as string,",
+				"          Division as string,",
+				"          Tarifa as string,",
+				"          Corrector as double,",
+				"          Divisa as string,",
+				"          Comentarios as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ComisionesCondicionantes",
+				"ComisionesCondicionantes derive(Gama_Id = toInteger(iifNull(toString(Gama_Id),'')),",
+				"          each(match(name=='TipoPedido_Id'||name=='Marca_Id'||name=='Division'||name=='Tarifa'), $$ = iifNull(toString($$), ''))) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['Insert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_01_FICHEROSEXTERNOS\\', \\'Borrado Tabla EXT_FI_Comisiones\\', \\'INI\\', getdate();\\n\\ntruncate table EXT_FI_Comisiones;\\n\\nInsert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_00_FICHEROSEXTERNOS\\', \\'Borrado Tabla EXT_FI_Comisiones\\', \\'FIN\\', getdate();\\n\\nInsert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_00_FICHEROSEXTERNOS\\', \\'Descarga Tabla EXT_FI_Comisiones\\', \\'INI\\', getdate()\\n\\n'],",
+				"     postSQLs:['Insert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_01_FICHEROSEXTERNOS\\', \\'Descarga Tabla EEXT_FI_Comisiones\\', \\'FIN\\', getdate()'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Representante_id,",
+				"          TipoPedido_Id,",
+				"          Gama_Id,",
+				"          Marca_Id,",
+				"          FechaInicio,",
+				"          Comision,",
+				"          {Nombre Rep},",
+				"          AM,",
+				"          Division,",
+				"          Tarifa,",
+				"          Corrector,",
+				"          Divisa,",
+				"          Comentarios",
+				"     )) ~> SinkComisionesCondicionantes"
+			]
+		}
+	}
+}

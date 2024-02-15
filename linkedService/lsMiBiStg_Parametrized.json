@@ -1,0 +1,21 @@
+{
+	"name": "lsMiBiStg_Parametrized",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"Database": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlMI",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=sqlmi-etl-prod-weu-01.878c47b5bf5b.database.windows.net;initial catalog=@{linkedService().Database};user id=UserDF",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIzMDUyYzlhNC1hZjMzLTQ1MWUtYTI5My1jMTgyOTYxYmRiMDciLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SRVPRD-IRSH",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

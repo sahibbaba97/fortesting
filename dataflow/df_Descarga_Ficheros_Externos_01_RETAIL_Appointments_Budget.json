@@ -1,0 +1,69 @@
+{
+	"name": "df_Descarga_Ficheros_Externos_01_RETAIL_Appointments_Budget",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_DL_Files_excel",
+						"type": "DatasetReference"
+					},
+					"name": "AppointmentsBudget"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_BISTG",
+						"type": "DatasetReference"
+					},
+					"name": "SinkAppointmentsBudget",
+					"description": "EXT_FichadasProbadas"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          Type as string,",
+				"          ID_Tienda as integer,",
+				"          {ID Cliente} as string,",
+				"          {ID Country} as string,",
+				"          Country as string,",
+				"          {Store Name} as string,",
+				"          ID_Fecha as integer,",
+				"          Month as integer,",
+				"          Appts as integer,",
+				"          CATEGORIA as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> AppointmentsBudget",
+				"AppointmentsBudget sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['Insert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_01_FICHEROSEXTERNOS\\', \\'Borrado Tabla EXT_MKT_Appointments_Objective\\', \\'INI\\', getdate();\\n\\ntruncate table EXT_MKT_Appointments_Objective;\\n\\nInsert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_00_FICHEROSEXTERNOS\\', \\'Borrado Tabla EXT_MKT_Appointments_Objective\\', \\'FIN\\', getdate();\\n\\nInsert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_00_FICHEROSEXTERNOS\\', \\'Descarga Tabla EXT_MKT_Appointments_Objective\\', \\'INI\\', getdate()\\n\\n'],",
+				"     postSQLs:['Insert into CONTROL_Log_Carga (Dw_Proceso, Dw_Descripcion, Dw_Paso, Dw_Fecha)\\nselect \\'DESCARGA_01_FICHEROSEXTERNOS\\', \\'Descarga Tabla EXT_MKT_Appointments_Objective\\', \\'FIN\\', getdate()'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Type,",
+				"          ID_Tienda,",
+				"          ID_Cliente = {ID Cliente},",
+				"          ID_Pais = {ID Country},",
+				"          DS_Pais = Country,",
+				"          DS_Tienda = {Store Name},",
+				"          ID_FechaCita = ID_Fecha,",
+				"          Month,",
+				"          Appts,",
+				"          Category = CATEGORIA",
+				"     )) ~> SinkAppointmentsBudget"
+			]
+		}
+	}
+}

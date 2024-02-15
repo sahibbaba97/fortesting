@@ -1,0 +1,24 @@
+{
+	"name": "lsFicherosExternos",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "\\\\SRV-DATOS\\Business_Intelligence$\\99_Ficheros a cargar",
+			"userId": "pronovias\\svc_bisql",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_akv",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "akvSRVDatosPass"
+			}
+		},
+		"connectVia": {
+			"referenceName": "SRVPRD-IRSH",
+			"type": "IntegrationRuntimeReference"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}
