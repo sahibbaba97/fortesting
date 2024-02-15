@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_Descarga_Ficheros_Externos_01_CUADRO DATOS TIENDAS",
+						"referenceName": "dataflow1",
 						"type": "DataFlowReference"
 					},
 					"compute": {

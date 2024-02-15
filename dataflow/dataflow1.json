@@ -15,7 +15,7 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "join1"
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -30,11 +30,16 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 join(Length < addDays(),",
-				"     joinType:'inner',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1"
+				"source1 select(mapColumn(",
+				"          Make,",
+				"          Model,",
+				"          Type,",
+				"          Origin,",
+				"          DriveTrain,",
+				"          Length",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
