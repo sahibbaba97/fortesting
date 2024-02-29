@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Ajustes_Facturas",
+				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,17 +16,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_Descarga_Ficheros_Externos_01_Ajustes_Facturas",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"SinkAjustesFacturas": {
-								"TableName": "STG_Ajustes"
-							}
-						}
+						"referenceName": "dataflow1",
+						"type": "DataFlowReference"
 					},
-					"integrationRuntime": {
-						"referenceName": "irmg-etl-prod-weu-01",
-						"type": "IntegrationRuntimeReference"
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
 					},
 					"traceLevel": "Fine"
 				}
