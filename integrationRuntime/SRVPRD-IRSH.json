@@ -1,7 +1,0 @@
-{
-	"name": "SRVPRD-IRSH",
-	"properties": {
-		"type": "SelfHosted",
-		"description": "Seidor Integration Runtime"
-	}
-}
