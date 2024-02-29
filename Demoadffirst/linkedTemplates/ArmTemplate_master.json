@@ -19,14 +19,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
 		},
-		"CM_DB_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'CM_DB'"
-		},
-		"CM_DB_Master_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'CM_DB_Master'"
-		},
 		"Inputblob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Inputblob'"
@@ -51,14 +43,6 @@
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://synapsedem.dfs.core.windows.net/"
-		},
-		"DataLakePrimaryCopy_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://ermdevdlprcopy.dfs.core.windows.net/"
-		},
-		"SharepointOnline_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://microsofteur.sharepoint.com"
 		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
@@ -94,12 +78,6 @@
 					"AzueSQL_connectionString": {
 						"value": "[parameters('AzueSQL_connectionString')]"
 					},
-					"CM_DB_connectionString": {
-						"value": "[parameters('CM_DB_connectionString')]"
-					},
-					"CM_DB_Master_connectionString": {
-						"value": "[parameters('CM_DB_Master_connectionString')]"
-					},
 					"Inputblob_connectionString": {
 						"value": "[parameters('Inputblob_connectionString')]"
 					},
@@ -115,8 +93,8 @@
 					"AzureDataLakeStorage1_accountKey": {
 						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
 					},
-					"SharepointOnline_properties_typeProperties_url": {
-						"value": "[parameters('SharepointOnline_properties_typeProperties_url')]"
+					"AzureSqlDatabase1_connectionString": {
+						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
 					},
 					"SqlServer1_properties_typeProperties_userName": {
 						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
@@ -142,14 +120,8 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"AzureSqlDatabase1_connectionString": {
-						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
-					},
 					"SqlServer2_connectionString": {
 						"value": "[parameters('SqlServer2_connectionString')]"
-					},
-					"DataLakePrimaryCopy_properties_typeProperties_url": {
-						"value": "[parameters('DataLakePrimaryCopy_properties_typeProperties_url')]"
 					}
 				}
 			},

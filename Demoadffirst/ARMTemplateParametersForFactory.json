@@ -14,12 +14,6 @@
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
-		"CM_DB_connectionString": {
-			"value": ""
-		},
-		"CM_DB_Master_connectionString": {
-			"value": ""
-		},
 		"Inputblob_connectionString": {
 			"value": ""
 		},
@@ -37,12 +31,6 @@
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://synapsedem.dfs.core.windows.net/"
-		},
-		"DataLakePrimaryCopy_properties_typeProperties_url": {
-			"value": "https://ermdevdlprcopy.dfs.core.windows.net/"
-		},
-		"SharepointOnline_properties_typeProperties_url": {
-			"value": "https://microsofteur.sharepoint.com"
 		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"value": "EUROPE\\v-sbabayev"

@@ -19,14 +19,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
 		},
-		"CM_DB_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'CM_DB'"
-		},
-		"CM_DB_Master_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'CM_DB_Master'"
-		},
 		"Inputblob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Inputblob'"
@@ -51,14 +43,6 @@
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://synapsedem.dfs.core.windows.net/"
-		},
-		"DataLakePrimaryCopy_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://ermdevdlprcopy.dfs.core.windows.net/"
-		},
-		"SharepointOnline_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://microsofteur.sharepoint.com"
 		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
@@ -167,14 +151,118 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Sharepoint_to_Blob')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "GetToken",
-						"type": "WebActivity",
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('Copy data2').output.pipelineReturnValue",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Web1",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"method": "GET",
+										"headers": {},
+										"url": "https://accounts.accesscontrol.windows.net/72f988bf-86f1-41af-91ab-2d7cd011db47/tokens/OAuth/2",
+										"connectVia": {
+											"referenceName": "AutoResolveIntegrationRuntime",
+											"type": "IntegrationRuntimeReference"
+										}
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Copy data2",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "GET"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "DelimitedText2",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "CarsCSV",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Copy data3",
+						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -185,24 +273,53 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/x-www-form-urlencoded"
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
 							},
-							"url": "https://accounts.accesscontrol.windows.net/72f988bf-86f1-41af-91ab-2d7cd011db47/tokens/OAuth/2",
-							"connectVia": {
-								"referenceName": "AutoResolveIntegrationRuntime",
-								"type": "IntegrationRuntimeReference"
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
 							},
-							"body": "grant_type=client_credentials&client_id=92d83610-28a1-43e1-8f67-e21e5e769bf0@72f988bf-86f1-41af-91ab-2d7cd011db47&client_secret=Zx08Q~rc4xpyKIPMPycGiL2vMXRU4Jj2.ivEYa-w&resource=00000003-0000-0ff1-ce00-000000000000/microsofteur.sharepoint.com@72f988bf-86f1-41af-91ab-2d7cd011db47"
-						}
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CarsCSV",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CarsTable",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					},
 					{
-						"name": "Copy_Sharepoint_Blob",
-						"type": "Copy",
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
 						"dependsOn": [
 							{
-								"activity": "GetToken",
+								"activity": "Copy data3",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -217,70 +334,83 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "HttpReadSettings",
-									"requestMethod": "GET",
-									"additionalHeaders": {
-										"value": "@{concat('Authorization:Bearer ',activity('GetToken').output.access_token)}",
-										"type": "Expression"
-									},
-									"requestTimeout": ""
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "DelimitedText2",
+							"dataset": {
+								"referenceName": "CarsCSV",
 								"type": "DatasetReference",
 								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
 							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DelimitedText3",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
 				"annotations": [],
-				"lastPublishTime": "2024-01-08T13:29:32Z"
+				"lastPublishTime": "2024-01-08T10:42:49Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CarsCSV')]",
+				"[concat(variables('factoryId'), '/datasets/CarsTable')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('factoryId'), '/datasets/DelimitedText2')]",
-				"[concat(variables('factoryId'), '/datasets/DelimitedText3')]"
+				"[concat(variables('factoryId'), '/datasets/DelimitedText2')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data1",
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Cars CSV to SQL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Cars CSV to SQL",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -337,10 +467,10 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"annotations": [],
-				"lastPublishTime": "2024-01-08T10:42:49Z"
+				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]",
 				"[concat(variables('factoryId'), '/datasets/CarsCSV')]",
 				"[concat(variables('factoryId'), '/datasets/CarsTable')]"
 			]
@@ -452,15 +582,15 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "SharepointOnline",
+					"referenceName": "AzureDataLakeStorage1",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": "/teams/SharepointRepro/_api/web/GetFileByServerRelativeUrl('/teams/SharepointRepro/Shared Documents/ReproGreg/Book.xlsx')/$value/"
+						"type": "AzureBlobFSLocation",
+						"fileName": "/teams/SharepointRepro/_api/web/GetFileByServerRelativeUrl('/teams/SharepointRepro/Shared Documents/ReproGreg/Book.xlsx')/$value/"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -469,7 +599,7 @@
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SharepointOnline')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
 			]
 		},
 		{
@@ -555,51 +685,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CM_DB')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('CM_DB_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CM_DB_Master')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('CM_DB_Master_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DataLakePrimaryCopy')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('DataLakePrimaryCopy_properties_typeProperties_url')]"
-				},
-				"connectVia": {
-					"referenceName": "AzureIntegrationServices",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/AzureIntegrationServices')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Inputblob')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -621,21 +706,6 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('OutputSQL_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SharepointOnline')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "HttpServer",
-				"typeProperties": {
-					"url": "[parameters('SharepointOnline_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": false,
-					"authenticationType": "Anonymous"
 				}
 			},
 			"dependsOn": []
@@ -682,6 +752,108 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWPUB_Diario')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Week",
+						"interval": 1,
+						"startTime": "2023-12-08T10:00:00",
+						"timeZone": "Romance Standard Time",
+						"schedule": {
+							"minutes": [
+								30
+							],
+							"hours": [
+								4
+							],
+							"weekDays": [
+								"Tuesday",
+								"Wednesday",
+								"Thursday",
+								"Friday"
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWPUB_Lunes')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Week",
+						"interval": 1,
+						"startTime": "2023-12-10T17:02:00",
+						"timeZone": "Romance Standard Time",
+						"schedule": {
+							"minutes": [
+								30
+							],
+							"hours": [
+								2
+							],
+							"weekDays": [
+								"Monday"
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWPUB_TPV_Diario')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Week",
+						"interval": 1,
+						"startTime": "2023-12-22T11:31:00",
+						"timeZone": "Romance Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								5
+							],
+							"weekDays": [
+								"Sunday",
+								"Monday",
+								"Tuesday",
+								"Wednesday",
+								"Thursday",
+								"Friday",
+								"Saturday"
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/scheduled_trigger')]",
@@ -770,6 +942,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureIR')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "West Europe",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 10,
+							"cleanup": false,
+							"customProperties": []
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureIntegrationServices')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -820,6 +1013,38 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/irmg-etl-prod-weu-01')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "West Europe",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 10,
+							"cleanup": false,
+							"customProperties": []
+						},
+						"pipelineExternalComputeScaleProperties": {
+							"timeToLive": 60,
+							"numberOfPipelineNodes": 1,
+							"numberOfExternalNodes": 1
+						}
+					}
+				},
+				"managedVirtualNetwork": {
+					"type": "ManagedVirtualNetworkReference",
+					"referenceName": "default"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/new1')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -839,6 +1064,77 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CarsCSV",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CarsCSV",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Make as string,",
+						"          Model as string,",
+						"          Type as string,",
+						"          Origin as string,",
+						"          DriveTrain as string,",
+						"          Length as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          Make,",
+						"          Model,",
+						"          Type,",
+						"          Origin,",
+						"          DriveTrain,",
+						"          Length",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Make as string,",
+						"          Model as string,",
+						"          Type as string,",
+						"          Origin as string,",
+						"          DriveTrain as string,",
+						"          Length as string",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CarsCSV')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/default')]",
