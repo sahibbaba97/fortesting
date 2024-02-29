@@ -1,12 +1,16 @@
 {
 	"name": "DelimitedText2",
 	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "HttpServerLocation",
-				"relativeUrl": "/teams/SharepointRepro/_api/web/GetFileByServerRelativeUrl('/teams/SharepointRepro/Shared Documents/ReproGreg/Book.xlsx')/$value/"
+				"type": "AzureBlobFSLocation",
+				"fileName": "/teams/SharepointRepro/_api/web/GetFileByServerRelativeUrl('/teams/SharepointRepro/Shared Documents/ReproGreg/Book.xlsx')/$value/"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
