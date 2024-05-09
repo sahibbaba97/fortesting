@@ -48,6 +48,20 @@
 			"type": "string",
 			"defaultValue": "EUROPE\\v-sbabayev"
 		},
+		"AzureDataLakeStorage665_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/2535b69d-f82b-450b-b944-1d072525fa83/resourceGroups/Demo/providers/Microsoft.Storage/storageAccounts/synapsedem"
+		},
+		"AzureDataLakeStorage665_properties_groupId": {
+			"type": "string",
+			"defaultValue": "dfs"
+		},
+		"AzureDataLakeStorage665_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"synapsedem.dfs.core.windows.net"
+			]
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -90,17 +104,17 @@
 					"SqlServer1_password": {
 						"value": "[parameters('SqlServer1_password')]"
 					},
-					"AzureDataLakeStorage1_accountKey": {
-						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
-					},
-					"AzureSqlDatabase1_connectionString": {
-						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
-					},
 					"SqlServer1_properties_typeProperties_userName": {
 						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
 					},
-					"AzureDataLakeStorage1_properties_typeProperties_url": {
-						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+					"AzureDataLakeStorage665_properties_privateLinkResourceId": {
+						"value": "[parameters('AzureDataLakeStorage665_properties_privateLinkResourceId')]"
+					},
+					"AzureDataLakeStorage665_properties_groupId": {
+						"value": "[parameters('AzureDataLakeStorage665_properties_groupId')]"
+					},
+					"AzureDataLakeStorage665_properties_fqdns": {
+						"value": "[parameters('AzureDataLakeStorage665_properties_fqdns')]"
 					}
 				}
 			},
@@ -120,8 +134,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
+					"AzureSqlDatabase1_connectionString": {
+						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
+					},
 					"SqlServer2_connectionString": {
 						"value": "[parameters('SqlServer2_connectionString')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
 					}
 				}
 			},

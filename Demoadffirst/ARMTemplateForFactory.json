@@ -47,6 +47,20 @@
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "EUROPE\\v-sbabayev"
+		},
+		"AzureDataLakeStorage665_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/2535b69d-f82b-450b-b944-1d072525fa83/resourceGroups/Demo/providers/Microsoft.Storage/storageAccounts/synapsedem"
+		},
+		"AzureDataLakeStorage665_properties_groupId": {
+			"type": "string",
+			"defaultValue": "dfs"
+		},
+		"AzureDataLakeStorage665_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"synapsedem.dfs.core.windows.net"
+			]
 		}
 	},
 	"variables": {
@@ -142,12 +156,138 @@
 					"elapsedTimeMetric": {}
 				},
 				"annotations": [],
-				"lastPublishTime": "2024-01-08T10:42:49Z"
+				"lastPublishTime": "2024-02-29T15:22:11Z"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/CarsCSV')]",
 				"[concat(variables('factoryId'), '/datasets/CarsTable')]",
 				"[concat(variables('factoryId'), '/pipelines/pipeline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Repro')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "RunFabricNotebookLogin_Service_Account",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkwxS2ZLRklfam5YYndXYzIyeFp4dzFzVUhIMCIsImtpZCI6IkwxS2ZLRklfam5YYndXYzIyeFp4dzFzVUhIMCJ9.eyJhdWQiOiJodHRwczovL2FuYWx5c2lzLndpbmRvd3MubmV0L3Bvd2VyYmkvYXBpIiwiaXNzIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzJmOTg4YmYtODZmMS00MWFmLTkxYWItMmQ3Y2QwMTFkYjQ3LyIsImlhdCI6MTcxNDY1NTE5MiwibmJmIjoxNzE0NjU1MTkyLCJleHAiOjE3MTQ2NjAzNTMsImFjY3QiOjAsImFjciI6IjEiLCJhaW8iOiJBVlFBcS84V0FBQUFSeEZGc0RrZG1kbnplUnJ3YUxWWkJ3K3lMclRYU1ZBTHZyVEhBNHBsM041eGlkakwzVHJuc29HdU1jYkE0b3pqYlNWWktvOUVLeHFYRUF0TitaVXRQQUhrSjE3RmJxakNIOEt3ZHBvU2tZaz0iLCJhbXIiOlsicnNhIiwibWZhIl0sImFwcGlkIjoiODcxYzAxMGYtNWU2MS00ZmIxLTgzYWMtOTg2MTBhN2U5MTEwIiwiYXBwaWRhY3IiOiIwIiwiY29udHJvbHMiOlsiYXBwX3JlcyJdLCJjb250cm9sc19hdWRzIjpbIjAwMDAwMDA5LTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMCIsIjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMCJdLCJkZXZpY2VpZCI6IjljZjUyOThmLWY0N2EtNDZjMi1iODc2LTFmODE5ZjIyMTUyZiIsImZhbWlseV9uYW1lIjoiQmFiYXlldiIsImdpdmVuX25hbWUiOiJTYWhpYiIsImlwYWRkciI6IjIwLjgyLjYyLjIwMCIsIm5hbWUiOiJTYWhpYiBCYWJheWV2IChNSU5EVFJFRSBMSU1JVEVEKSIsIm9pZCI6ImM0MTNlYjcwLTBlZWYtNDhjMy04MWFiLTliZjdkZDJhNGQ3OSIsIm9ucHJlbV9zaWQiOiJTLTEtNS0yMS0xNzIxMjU0NzYzLTQ2MjY5NTgwNi0xNTM4ODgyMjgxLTQzMDgxNTMiLCJwdWlkIjoiMTAwMzIwMDJBMkU1MDdFNyIsInJoIjoiMC5BUm9BdjRqNWN2R0dyMEdScXkxODBCSGJSd2tBQUFBQUFBQUF3QUFBQUFBQUFBQWFBRlUuIiwic2NwIjoidXNlcl9pbXBlcnNvbmF0aW9uIiwic2lnbmluX3N0YXRlIjpbImR2Y19tbmdkIiwiZHZjX2RtamQiLCJrbXNpIl0sInN1YiI6IlFaaDNZYnZYdEg4S0t0TXBEWkFkeTd4RTNUX0dHRE8tOXdJT0VRdUlhTUUiLCJ0aWQiOiI3MmY5ODhiZi04NmYxLTQxYWYtOTFhYi0yZDdjZDAxMWRiNDciLCJ1bmlxdWVfbmFtZSI6InYtc2JhYmF5ZXZAbWljcm9zb2Z0LmNvbSIsInVwbiI6InYtc2JhYmF5ZXZAbWljcm9zb2Z0LmNvbSIsInV0aSI6InpxcTNCNzVOeFVHT1hyNXBNcDFTQUEiLCJ2ZXIiOiIxLjAiLCJ3aWRzIjpbImI3OWZiZjRkLTNlZjktNDY4OS04MTQzLTc2YjE5NGU4NTUwOSJdLCJ4bXNfY2MiOlsiQ1AxIl19.PUHHxELLxuzgZ0g7N_ErbHId96UJu5L2WRss7XoUzPrvpiQAn5YM57Mj4MKVDaIjbz3T7v3gJHf1aJWP4Q3G0BnXI66y5YKLKI1AH8FK3TJ2ArcZb9fzhdfldZNRb2chNmrCm3q_fIA2t4lFwoKhyJMHY7RhsWbE9vjBrFWdya70TiDRG4t_V7kj6NEzHovlhF4SOHEa2zEB_F6m8hVNMHrVrH-gTfFxhFKwil8Hupd0f_c-Ixrq_5uK_SuEtIjtYeF72h1BisnBsrawRAfnZE_OeRUtQc_N8tcMGD_nkP9_B2oYUi8Vzsy9YSpzXdYRj7oXwI8VbN8VLJI7yu6egw"
+							},
+							"url": "https://api.fabric.microsoft.com/v1/workspaces/149b087c-8550-4a97-93c5-ba60c168623b/items/49e45f2c-083a-45a9-b153-e405aa060e72/jobs/instances?jobType=Pipeline",
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"body": {
+								"value": "{}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"ClientID": {
+						"type": "string",
+						"defaultValue": "c5d79f7c-ba18-46e9-b9e9-436c3a7eb37f"
+					},
+					"Secret": {
+						"type": "string",
+						"defaultValue": "twT8Q~AVOuHekr4ojQsQbYZiYdyNpi1RcTuwabkk"
+					},
+					"password": {
+						"type": "string",
+						"defaultValue": "S@#ib571233088!"
+					},
+					"one_lake": {
+						"type": "string"
+					},
+					"lakehouse": {
+						"type": "string"
+					},
+					"tables": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"token": {
+						"type": "String"
+					},
+					"test": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "FabricSync"
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-05-02T13:20:23Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/check')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-02-29T14:58:57Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
 			]
 		},
 		{
@@ -357,7 +497,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"annotations": [],
-				"lastPublishTime": "2024-01-08T10:42:49Z"
+				"lastPublishTime": "2024-02-29T15:22:10Z"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/CarsCSV')]",
@@ -467,7 +607,8 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2024-02-29T15:22:10Z"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/dataflow1')]",
@@ -1142,6 +1283,19 @@
 			"apiVersion": "2018-06-01",
 			"properties": {},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/AzureDataLakeStorage665')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('AzureDataLakeStorage665_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('AzureDataLakeStorage665_properties_groupId')]",
+				"fqdns": "[parameters('AzureDataLakeStorage665_properties_fqdns')]"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
 		}
 	]
 }
